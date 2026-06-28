@@ -1,10 +1,12 @@
 # Multimodal RAG for Scientific Papers
 
-A portfolio-grade, **multimodal** Retrieval-Augmented Generation system for scientific papers. Upload a PDF and ask questions that are answered with citations to **both text passages and figures**. It runs **fully locally and free** by default (Ollama + open-source embeddings), with an optional high-quality **AWS Bedrock Claude** backend — swappable via a single environment variable.
+A **multimodal** Retrieval-Augmented Generation system for scientific papers. Upload a PDF and ask questions that are answered with citations to **both text passages and figures**. It runs **fully locally and free** by default (Ollama + open-source embeddings), with an optional high-quality **AWS Bedrock Claude** backend — swappable via a single environment variable.
 
-> Built to demonstrate end-to-end ML/RAG engineering: PDF understanding, multimodal retrieval (text + image embeddings in a shared space), a pluggable LLM provider abstraction, a FastAPI service, and a React/TypeScript UI.
+## Demo
 
----
+Asking *"What does Figure 1 (the Transformer architecture) show?"* over the "Attention Is All You Need" paper — the answer cites both text passages (by page) and the relevant figures:
+
+![Multimodal RAG chat UI with text and figure citations](docs/demo-chat.png)
 
 ## Why this project
 
