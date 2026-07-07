@@ -48,7 +48,7 @@ flowchart LR
 
 ## Design rationale
 
-- **Pluggable LLM layer** (`backend/app/llm/`): a small `LLMProvider` protocol with `ollama` and `bedrock` implementations selected by `LLM_PROVIDER`. The repo clones-and-runs for free locally; swapping to Bedrock is one env var. This mirrors real forward-deployed work where you prototype locally and productionize on cloud.
+- **Pluggable LLM layer** (`backend/app/llm/`): a small `LLMProvider` protocol with `ollama` and `bedrock` implementations selected by `LLM_PROVIDER`. The repo clones-and-runs for free locally; swapping to Bedrock is one env var. This mirrors real forward-deployed work: prototype locally, productionize on cloud.
 - **True multimodal retrieval, not captions:** figures are embedded as *images* via CLIP (rather than only captioning them as text), so retrieval is grounded in visual content while still being queryable by a text question.
 - **No-figure-left-behind ingestion:** many scientific figures are vector graphics that `get_images()` misses, so each page is also rendered to an image as a labeled fallback.
 - **Graceful degradation:** if no vision model is pulled, retrieval still works and the API returns citations with a clear note instead of failing.
@@ -91,7 +91,7 @@ uv run uvicorn backend.app.main:app --reload --port 8000
 cd frontend && npm install && npm run dev
 ```
 
-Open http://localhost:5173, upload a PDF, and ask away. Try the included sample:
+Then open http://localhost:5173, upload a PDF, and start asking questions. A sample paper can be fetched with:
 
 ```bash
 uv run python scripts/fetch_sample_papers.py   # downloads "Attention Is All You Need" et al.
@@ -108,7 +108,7 @@ AWS_REGION=us-east-1
 BEDROCK_MODEL_ID=anthropic.claude-3-5-sonnet-20241022-v2:0
 ```
 
-AWS credentials are read from the standard chain (env vars, `~/.aws/credentials`, or an IAM role). Ensure your account has access to the chosen Bedrock model.
+AWS credentials are read from the standard chain (env vars, `~/.aws/credentials`, or an IAM role). The account must have access to the chosen Bedrock model.
 
 ## API
 
