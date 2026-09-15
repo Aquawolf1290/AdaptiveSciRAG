@@ -17,3 +17,5 @@ services:
         value: data
       - key: CHROMA_DIR
         value: data/chroma
+      - key: ENABLE_IMAGE_RETRIEVAL
+        value: "false"

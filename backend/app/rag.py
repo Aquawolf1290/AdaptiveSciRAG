@@ -32,7 +32,7 @@ def ingest_paper(pdf_path: str, original_filename: str | None = None) -> dict:
         store.add_text_chunks(text_records, text_vecs, title=result.title)
 
     figure_records = [f.to_dict() for f in result.figures]
-    if figure_records:
+    if figure_records and settings.enable_image_retrieval:
         image_embedder = get_image_embedder()
         image_vecs = image_embedder.embed_images([r["path"] for r in figure_records])
         store.add_figures(figure_records, image_vecs, title=result.title)
@@ -69,13 +69,14 @@ def answer_question(question: str, paper_id: str | None = None) -> dict:
     store = get_vector_store()
 
     text_embedder = get_text_embedder()
-    image_embedder = get_image_embedder()
-
     text_qvec = text_embedder.embed([question])[0]
     text_hits = store.query_text(text_qvec, settings.top_k_text, paper_id=paper_id)
 
-    image_qvec = image_embedder.embed_text([question])[0]
-    figure_hits = store.query_images(image_qvec, settings.top_k_images, paper_id=paper_id)
+    figure_hits: list[dict] = []
+    if settings.enable_image_retrieval:
+        image_embedder = get_image_embedder()
+        image_qvec = image_embedder.embed_text([question])[0]
+        figure_hits = store.query_images(image_qvec, settings.top_k_images, paper_id=paper_id)
 
     images: list[bytes] = []
     figure_citations: list[dict] = []

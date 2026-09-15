@@ -130,6 +130,10 @@ the optional Bedrock provider with valid AWS credentials. Without a reachable
 LLM provider, the deployed API still supports ingestion and retrieval but cannot
 generate the final answer.
 
+For the Render free tier, `ENABLE_IMAGE_RETRIEVAL=false` is set automatically
+to avoid loading the memory-heavy OpenCLIP model. Local development keeps the
+full multimodal pipeline enabled with `ENABLE_IMAGE_RETRIEVAL=true`.
+
 ## API
 
 | Method | Route | Description |
