@@ -57,12 +57,29 @@ async function parseJson<T>(res: Response): Promise<T> {
 }
 
 export async function health(): Promise<HealthResponse> {
-  const res = await fetch(apiUrl("/health"));
-  const data = await parseJson<Partial<HealthResponse>>(res);
-  return {
-    status: data.status ?? "ok",
-    provider: data.provider ?? "unknown",
-  };
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 15000);
+      try {
+        const res = await fetch(apiUrl("/health"), { signal: controller.signal });
+        const data = await parseJson<Partial<HealthResponse>>(res);
+        return {
+          status: data.status ?? "ok",
+          provider: data.provider ?? "unknown",
+        };
+      } finally {
+        window.clearTimeout(timeout);
+      }
+    } catch (error) {
+      lastError = error;
+      if (attempt < 2) {
+        await new Promise((resolve) => window.setTimeout(resolve, 3000));
+      }
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("Backend health check failed");
 }
 
 function normalizePaper(raw: Record<string, unknown>): Paper {
