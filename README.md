@@ -116,8 +116,8 @@ The repository includes deployment configuration for a free-tier split deploymen
 
 1. Create a new **Render Web Service** from this repository. Render detects
    [`render.yaml`](../render.yaml), or use:
-   - Build command: `pip install uv && uv sync --no-dev`
-   - Start command: `uv run uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
+   - Build command: `pip install uv && uv sync --no-dev --no-install-project`
+   - Start command: `uv run --no-project uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
 2. Set `FRONTEND_ORIGIN` to the final Vercel URL in Render.
 3. Deploy the `frontend/` directory as a **Vercel** project. Vercel detects
    [`vercel.json`](../frontend/vercel.json).
