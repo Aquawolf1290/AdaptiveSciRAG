@@ -20,9 +20,9 @@ app = FastAPI(title="Multimodal RAG for Scientific Papers", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "*",
+        origin.strip()
+        for origin in settings.frontend_origin.split(",")
+        if origin.strip()
     ],
     allow_credentials=True,
     allow_methods=["*"],

@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     )
 
     llm_provider: str = "ollama"
+    frontend_origin: str = "http://localhost:5173"
 
     ollama_host: str = "http://localhost:11434"
     ollama_vision_model: str = "qwen3-vl:8b"

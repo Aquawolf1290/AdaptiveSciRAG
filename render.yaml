@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: multimodal-rag-api
+    runtime: python
+    plan: free
+    buildCommand: pip install uv && uv sync --no-dev
+    startCommand: uv run uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: LLM_PROVIDER
+        value: ollama
+      - key: OLLAMA_HOST
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: DATA_DIR
+        value: data
+      - key: CHROMA_DIR
+        value: data/chroma

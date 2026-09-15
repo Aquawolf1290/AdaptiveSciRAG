@@ -110,6 +110,26 @@ BEDROCK_MODEL_ID=anthropic.claude-3-5-sonnet-20241022-v2:0
 
 AWS credentials are read from the standard chain (env vars, `~/.aws/credentials`, or an IAM role). The account must have access to the chosen Bedrock model.
 
+## Free deployment: Render + Vercel
+
+The repository includes deployment configuration for a free-tier split deployment:
+
+1. Create a new **Render Web Service** from this repository. Render detects
+   [`render.yaml`](../render.yaml), or use:
+   - Build command: `pip install uv && uv sync --no-dev`
+   - Start command: `uv run uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
+2. Set `FRONTEND_ORIGIN` to the final Vercel URL in Render.
+3. Deploy the `frontend/` directory as a **Vercel** project. Vercel detects
+   [`vercel.json`](../frontend/vercel.json).
+4. Set the Vercel environment variable `VITE_API_BASE` to the Render service URL,
+   then redeploy the frontend.
+
+The Render free tier has ephemeral storage and cannot host Ollama or a large
+vision model reliably. Set `OLLAMA_HOST` to a reachable Ollama server, or use
+the optional Bedrock provider with valid AWS credentials. Without a reachable
+LLM provider, the deployed API still supports ingestion and retrieval but cannot
+generate the final answer.
+
 ## API
 
 | Method | Route | Description |
