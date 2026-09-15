@@ -19,3 +19,5 @@ services:
         value: data/chroma
       - key: ENABLE_IMAGE_RETRIEVAL
         value: "false"
+      - key: LIGHTWEIGHT_EMBEDDINGS
+        value: "true"

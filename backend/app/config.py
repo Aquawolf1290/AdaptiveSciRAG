@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     top_k_text: int = 5
     top_k_images: int = 3
     enable_image_retrieval: bool = True
+    lightweight_embeddings: bool = False
 
     data_dir: str = "data"
     chroma_dir: str = "data/chroma"

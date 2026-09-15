@@ -7,6 +7,9 @@ cheap and does not download weights until first use.
 from __future__ import annotations
 
 import threading
+import hashlib
+import math
+import re
 from pathlib import Path
 
 from PIL import Image
@@ -23,6 +26,9 @@ class TextEmbedder:
     _instance: "TextEmbedder | None" = None
 
     def __init__(self) -> None:
+        if settings.lightweight_embeddings:
+            self._model = None
+            return
         from sentence_transformers import SentenceTransformer
 
         self._model = SentenceTransformer(settings.text_embed_model)
@@ -38,6 +44,8 @@ class TextEmbedder:
     def embed(self, texts: list[str]) -> list[list[float]]:
         if not texts:
             return []
+        if self._model is None:
+            return [self._hash_embed(text) for text in texts]
         vectors = self._model.encode(
             texts,
             normalize_embeddings=True,
@@ -45,6 +53,18 @@ class TextEmbedder:
             show_progress_bar=False,
         )
         return vectors.tolist()
+
+    @staticmethod
+    def _hash_embed(text: str, dimensions: int = 384) -> list[float]:
+        """Create deterministic local vectors without downloading a model."""
+        vector = [0.0] * dimensions
+        tokens = re.findall(r"\w+", text.lower())
+        for token in tokens:
+            digest = hashlib.sha256(token.encode("utf-8")).digest()
+            index = int.from_bytes(digest[:4], "big") % dimensions
+            vector[index] += 1.0
+        norm = math.sqrt(sum(value * value for value in vector))
+        return [value / norm for value in vector] if norm else vector
 
 
 class ImageEmbedder:

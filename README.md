@@ -133,6 +133,10 @@ generate the final answer.
 For the Render free tier, `ENABLE_IMAGE_RETRIEVAL=false` is set automatically
 to avoid loading the memory-heavy OpenCLIP model. Local development keeps the
 full multimodal pipeline enabled with `ENABLE_IMAGE_RETRIEVAL=true`.
+Render also enables `LIGHTWEIGHT_EMBEDDINGS=true`, which uses deterministic
+local text vectors instead of downloading the sentence-transformer model.
+This keeps PDF upload responsive on the free tier; local development keeps the
+stronger sentence-transformer model by default.
 
 ## API
 
